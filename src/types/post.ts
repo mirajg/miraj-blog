@@ -8,11 +8,12 @@ export type Post = {
   content: string;
   category: string; // the category slug, e.g. "web-development"
   tags: string[];
-  coverImage?: string;
-  coverImageAlt?: string;
+  coverImage?: string | null;
+  coverImagePublicId?: string | null;
+  coverImageAlt?: string | null;
   author: string;
   publishedAt: Date;
-  updatedAt: Date; 
+  updatedAt: Date;
   readingTime: number; // minutes
   published: boolean;
 };

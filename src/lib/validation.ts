@@ -24,6 +24,11 @@ export const postSchema = z
       .url("Enter a full URL")
       .refine((url) => url.startsWith("https://"), "Use an https:// URL")
       .optional(),
+    coverImagePublicId: z
+      .string()
+      .trim()
+      .max(300)
+      .optional(),
     coverImageAlt: z.string().trim().max(200).optional(),
     published: z.boolean(),
   })

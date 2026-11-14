@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Added for the blog
+  // Added for the blog 
   poweredByHeader: false,
   images: {
     remotePatterns: [

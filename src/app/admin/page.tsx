@@ -167,7 +167,7 @@ export default async function AdminDashboardPage() {
       <section>
         <h2 className="mb-4 text-xl font-semibold text-white">
           Quick actions
-        </h2>
+        </h2> 
 
         <div className="grid gap-4 sm:grid-cols-2">
           <Link

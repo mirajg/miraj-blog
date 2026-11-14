@@ -14,6 +14,7 @@ export interface PostDocument {
   author: string;
   published: boolean;
   publishedAt: Date | null;
+  coverImagePublicId?: string | null;
   readingTime: number;
   createdAt: Date;
   updatedAt: Date;
@@ -29,6 +30,10 @@ const postSchema = new Schema<PostDocument>(
     category: { type: String, required: true },
     tags: { type: [String], default: [] },
     coverImage: { type: String },
+    coverImagePublicId: {
+      type: String,
+      default: null,
+    },
     coverImageAlt: { type: String },
     author: { type: String, required: true, default: AUTHOR_NAME },
     published: { type: Boolean, default: false },

@@ -7,6 +7,7 @@ import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { Field, inputClass } from "@/components/ui/Field";
 import { CATEGORIES } from "@/constants/site";
+import Image from "next/image";
 
 type Props = {
   // Pass a post to edit it; leave out to create a new one
@@ -20,6 +21,7 @@ type Props = {
     tags: string[];
     coverImage?: string | null;
     coverImageAlt?: string | null;
+    coverImagePublicId?: string | null;
     published: boolean;
   };
 };
@@ -29,6 +31,16 @@ export default function PostForm({ post }: Props) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [coverImage, setCoverImage] = useState(
+    post?.coverImage ?? ""
+  );
+
+  const [coverImagePublicId, setCoverImagePublicId] = useState(
+    post?.coverImagePublicId ?? ""
+  );
+
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [imageError, setImageError] = useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,6 +62,7 @@ export default function PostForm({ post }: Props) {
         .map((tag) => tag.trim())
         .filter(Boolean),
       coverImage: text("coverImage") || undefined,
+      coverImagePublicId: text("coverImagePublicId") || undefined,
       coverImageAlt: text("coverImageAlt") || undefined,
       published: form.get("published") === "on",
     };
@@ -88,6 +101,44 @@ export default function PostForm({ post }: Props) {
       setError("Network error. Please try again.");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleImageUpload(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    setImageError("");
+    setUploadingImage(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setImageError(data.error ?? "Could not upload image.");
+        return;
+      }
+
+      setCoverImage(data.url);
+      setCoverImagePublicId(data.publicId);
+    } catch {
+      setImageError("Network error while uploading image.");
+    } finally {
+      setUploadingImage(false);
+
+      // Allows selecting the same file again later.
+      event.target.value = "";
     }
   }
 
@@ -264,31 +315,132 @@ export default function PostForm({ post }: Props) {
           </h2>
 
           <p className="mt-1 text-sm text-zinc-500">
-            Add an image for the article preview and social sharing.
+            Upload an image from your device. It will be stored on
+            Cloudinary and attached to this post.
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2">
-          <Field
-            label="Cover image URL"
-            htmlFor="coverImage"
-            error={fieldErrors.coverImage}
-          >
-            <input
-              id="coverImage"
-              name="coverImage"
-              type="url"
-              defaultValue={post?.coverImage ?? ""}
-              placeholder="https://..."
-              className={inputClass}
-            />
-          </Field>
+        <div className="space-y-6">
+          {/* Upload */}
+          <div>
+            <label
+              htmlFor="coverImageFile"
+              className="flex min-h-48 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/60 px-6 py-8 text-center transition-all hover:border-blue-500/50 hover:bg-zinc-950 ">
+              {uploadingImage ? (
+                <>
+                  <div
+                    className="
+                h-8 w-8 animate-spin rounded-full
+                border-2 border-zinc-700
+                border-t-blue-500
+              "
+                  />
 
+                  <p className="mt-4 text-sm font-medium text-zinc-200">
+                    Uploading image...
+                  </p>
+
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Please wait
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div
+                    className="
+                flex h-12 w-12 items-center justify-center
+                rounded-xl border border-zinc-800
+                bg-zinc-900 text-zinc-400
+              "
+                  >
+                    ↑
+                  </div>
+
+                  <p className="mt-4 text-sm font-medium text-zinc-200">
+                    Choose an image
+                  </p>
+
+                  <p className="mt-1 text-xs text-zinc-500">
+                    JPG, PNG, WebP or AVIF · Max 5 MB
+                  </p>
+                </>
+              )}
+
+              <input
+                id="coverImageFile"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/avif"
+                onChange={handleImageUpload}
+                disabled={uploadingImage}
+                className="sr-only"
+              />
+            </label>
+
+            {imageError && (
+              <p
+                className="mt-2 text-sm text-red-400"
+                role="alert"
+              >
+                {imageError}
+              </p>
+            )}
+          </div>
+
+          {/* Preview */}
+          {coverImage && (
+            <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+              <div className="relative aspect-[1200/630] w-full">
+                <Image
+                  src={coverImage}
+                  alt={post?.coverImageAlt ?? "Cover image preview"}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 768px"
+                  className="object-cover"
+                />
+              </div>
+
+              <div className="flex items-center justify-between gap-4 border-t border-zinc-800 px-4 py-3">
+                <p className="min-w-0 truncate text-xs text-zinc-500">
+                  {coverImagePublicId || "Cloudinary image"}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCoverImage("");
+                    setCoverImagePublicId("");
+                  }}
+                  className="
+              shrink-0 text-xs font-medium
+              text-red-400 transition-colors
+              hover:text-red-300
+            "
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Hidden values */}
+          <input
+            type="hidden"
+            name="coverImage"
+            value={coverImage}
+          />
+
+          <input
+            type="hidden"
+            name="coverImagePublicId"
+            value={coverImagePublicId}
+          />
+
+          {/* Alt text */}
           <Field
             label="Cover image alt text"
             htmlFor="coverImageAlt"
             error={fieldErrors.coverImageAlt}
-            hint="Describe the image. Needed when a cover image is set."
+            hint="Describe the image for accessibility. Required when a cover image is set."
           >
             <input
               id="coverImageAlt"
@@ -320,7 +472,7 @@ export default function PostForm({ post }: Props) {
             error={fieldErrors.content}
             hint="Use ## and ### for headings. The title is already the H1."
           >
-            <textarea 
+            <textarea
               id="content"
               name="content"
               defaultValue={post?.content}

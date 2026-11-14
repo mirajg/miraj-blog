@@ -8,6 +8,7 @@ import { getReadingTime } from "@/lib/reading-time";
 import { generateUniqueSlug, isSlugTaken, slugify } from "@/lib/slug";
 import type { PostInput } from "@/lib/validation";
 import Post, { type PostDocument } from "@/models/Post";
+import { deleteCloudinaryImage } from "@/lib/cloudinary-image";
 import type {
   AdminPost,
   AdminPostSummary,
@@ -38,6 +39,7 @@ function toAdminSummary(doc: LeanSummary): AdminPostSummary {
     category: doc.category,
     tags: doc.tags ?? [],
     coverImage: doc.coverImage ?? undefined,
+    coverImagePublicId: doc.coverImagePublicId ?? undefined,
     coverImageAlt: doc.coverImageAlt ?? undefined,
     author: doc.author,
     published: doc.published,
@@ -76,6 +78,7 @@ function buildFields(input: PostInput) {
     category: input.category,
     tags: input.tags,
     coverImage: input.coverImage,
+    coverImagePublicId: input.coverImagePublicId,
     coverImageAlt: input.coverImageAlt,
     published: input.published,
     readingTime: getReadingTime(input.content),
@@ -205,28 +208,50 @@ export async function createPost(input: PostInput): Promise<AdminPost> {
   }
 }
 
-export async function updatePost(id: string, input: PostInput): Promise<AdminPost> {
+export async function updatePost(
+  id: string,
+  input: PostInput
+): Promise<AdminPost> {
   await connectDB();
   await Post.init();
 
   const post = await Post.findById(id);
   if (!post) throw new Error("Post not found");
 
+  // Save the old Cloudinary public ID before changing the document
+  const oldCoverImagePublicId = post.coverImagePublicId;
+
   // The slug never changes on its own: blank keeps the current one
   const slug = input.slug ? slugify(input.slug) || post.slug : post.slug;
-  if (slug !== post.slug && (await isSlugTaken(slug, id))) throw new SlugTakenError();
 
-  post.set({ ...buildFields(input), slug });
+  if (slug !== post.slug && (await isSlugTaken(slug, id))) {
+    throw new SlugTakenError();
+  }
+
+  post.set({
+    ...buildFields(input),
+    slug,
+  });
 
   // Set the publish date only the first time the post goes live.
   // Unpublishing keeps it, so republishing doesn't change the original date.
-  if (input.published && !post.publishedAt) post.publishedAt = new Date();
+  if (input.published && !post.publishedAt) {
+    post.publishedAt = new Date();
+  }
 
   try {
     await post.save();
   } catch (error) {
     if (isDuplicateKeyError(error)) throw new SlugTakenError();
     throw error;
+  }
+
+  // MongoDB update succeeded → now remove the old Cloudinary image
+  if (
+    oldCoverImagePublicId &&
+    oldCoverImagePublicId !== post.coverImagePublicId
+  ) {
+    await deleteCloudinaryImage(oldCoverImagePublicId);
   }
 
   return toAdminPost(post.toObject());
