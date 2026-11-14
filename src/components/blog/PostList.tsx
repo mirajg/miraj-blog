@@ -15,7 +15,7 @@ export default function PostList({
   if (posts.length === 0) return <p>{emptyMessage}</p>;
 
   return (
-    <ul className="post-list">
+    <ul className="space-y-6">
       {posts.map((post) => (
         <li key={post.slug}>
           <PostCard post={post} headingLevel={headingLevel} />

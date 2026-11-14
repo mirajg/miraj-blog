@@ -1,10 +1,12 @@
 
 import GithubSlugger from "github-slugger";
 
-type Heading = { level: 2 | 3; text: string; id: string };
+type Heading = {
+  level: 2 | 3;
+  text: string;
+  id: string;
+};
 
-// Reads "##" and "###" lines from the Markdown, skipping code blocks.
-// IDs are generated the same way rehype-slug does, so the links match.
 function getHeadings(markdown: string): Heading[] {
   const slugger = new GithubSlugger();
   const headings: Heading[] = [];
@@ -15,12 +17,12 @@ function getHeadings(markdown: string): Heading[] {
       inCodeBlock = !inCodeBlock;
       continue;
     }
+
     if (inCodeBlock) continue;
 
     const match = /^(#{2,3})\s+(.+?)(?:\s+#+)?\s*$/.exec(line);
     if (!match) continue;
 
-    // Remove Markdown symbols so the text matches what's rendered
     const text = match[2]
       .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
       .replace(/[`*_]/g, "");
@@ -35,17 +37,36 @@ function getHeadings(markdown: string): Heading[] {
   return headings;
 }
 
-export default function TableOfContents({ content }: { content: string }) {
+export default function TableOfContents({
+  content,
+}: {
+  content: string;
+}) {
   const headings = getHeadings(content);
-  if (headings.length < 3) return null; // not worth showing for short posts
+
+  if (headings.length < 3) return null;
 
   return (
-    <nav aria-label="Table of contents" className="my-8 rounded border p-4 text-sm">
-      <p className="mb-2 font-semibold">On this page</p>
-      <ul className="space-y-1">
+    <nav
+      aria-label="Table of contents"
+      className="my-10 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-lg shadow-black/10 sm:p-6"
+    >
+      <p className="mb-4 text-sm font-semibold uppercase tracking-[0.12em] text-zinc-400">
+        On this page
+      </p>
+
+      <ul className="space-y-2">
         {headings.map((heading) => (
-          <li key={heading.id} className={heading.level === 3 ? "pl-4" : ""}>
-            <a href={`#${heading.id}`}>{heading.text}</a>
+          <li
+            key={heading.id}
+            className={heading.level === 3 ? "pl-4" : ""}
+          >
+            <a
+              href={`#${heading.id}`}
+              className="block rounded-md px-2 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-blue-400"
+            >
+              {heading.text}
+            </a>
           </li>
         ))}
       </ul>

@@ -17,41 +17,73 @@ export type PostCardData = {
 
 type Props = {
   post: PostCardData;
-  headingLevel?: "h2" | "h3"; // keeps the heading order logical on each page
+  headingLevel?: "h2" | "h3";
 };
 
-export default function PostCard({ post, headingLevel: Heading = "h2" }: Props) {
+export default function PostCard({
+  post,
+  headingLevel: Heading = "h2",
+}: Props) {
   const href = `/blog/${post.slug}`;
 
   return (
-    <article className="space-y-3">
+    <article
+      className="
+        rounded-2xl
+        border border-zinc-800
+        bg-zinc-900/70
+        p-6
+        transition-all duration-300
+        hover:border-zinc-700
+        hover:bg-zinc-900
+        hover:shadow-lg
+        hover:shadow-black/20
+        sm:p-7
+      "
+    >
       {post.coverImage && (
-        <Link href={href} aria-hidden tabIndex={-1}>
+        <Link
+          href={href}
+          aria-hidden
+          tabIndex={-1}
+          className="block overflow-hidden rounded-xl"
+        >
           <Image
             src={post.coverImage}
             alt={post.coverImageAlt ?? ""}
             width={640}
             height={336}
             sizes="(max-width: 768px) 100vw, 768px"
-            className="h-auto w-full rounded"
+            draggable={false}
+            className="h-auto w-full transition-transform duration-500 hover:scale-[1.02]"
           />
         </Link>
       )}
 
-      <CategoryBadge slug={post.category} />
+      <div className={post.coverImage ? "mt-6" : ""}>
+        <CategoryBadge slug={post.category} />
 
-      <Heading className="text-xl font-semibold">
-        <Link href={href}>{post.title}</Link>
-      </Heading>
+        <Heading className="mt-4 text-xl font-semibold tracking-tight text-zinc-100 sm:text-2xl">
+          <Link
+            href={href}
+            className="transition-colors hover:text-blue-400"
+          >
+            {post.title}
+          </Link>
+        </Heading>
 
-      <p className="text-muted">{post.description}</p>
+        <p className="mt-3 text-base leading-7 text-zinc-400">
+          {post.description}
+        </p>
 
-      <p className="text-sm text-muted">
-        <time dateTime={post.publishedAt.toISOString()}>
-          {formatDate(post.publishedAt)}
-        </time>{" "}
-        · {post.readingTime} min read
-      </p>
+        <p className="mt-5 text-sm text-zinc-500">
+          <time dateTime={post.publishedAt.toISOString()}>
+            {formatDate(post.publishedAt)}
+          </time>{" "}
+          <span className="text-zinc-700">·</span>{" "}
+          {post.readingTime} min read
+        </p>
+      </div>
     </article>
   );
 }
