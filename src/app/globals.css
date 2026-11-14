@@ -176,6 +176,29 @@
     text-decoration: none;
   }
 
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .pagination a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .pagination span,
+  .pagination p {
+    color: var(--muted);
+  }
+
+  .pagination span[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
   .post-meta {
     color: var(--muted);
     font-size: 0.875rem;

@@ -56,6 +56,16 @@ src/
 4. The slug is generated from the title. You can edit it by hand. It never changes
    automatically when the title changes.
 
+## Browsing posts
+
+- The blog and each category show 10 posts per page.
+- Use the **Previous** and **Next** links to navigate. Pages have stable URLs such
+  as `/blog?page=2` and `/category/web-development?page=2`, so refresh, sharing,
+  and browser history keep the current page.
+- Each page is server-rendered, and the pagination links are ordinary crawlable
+  links. Paginated pages use their own canonical URLs; the sitemap continues to
+  list every published post.
+
 ## Security notes
 
 - Admin password is stored only as a bcrypt hash. Secrets live in environment variables.

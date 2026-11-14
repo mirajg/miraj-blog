@@ -22,6 +22,8 @@ export class SlugTakenError extends Error {
   }
 }
 
+export const PUBLIC_POSTS_PAGE_SIZE = 10;
+
 /* ---------- Mapping: database document -> plain objects for the UI ---------- */
 
 type LeanPost = PostDocument & { _id: Types.ObjectId };
@@ -91,11 +93,45 @@ export async function getPublishedPosts(
     ...(options.category ? { category: options.category } : {}),
   })
     .select("-content")
-    .sort({ publishedAt: -1 })
+    .sort({ publishedAt: -1, _id: -1 })
     .limit(options.limit ?? 0) // 0 means no limit
     .lean<LeanSummary[]>();
 
   return docs.map(toSummary);
+}
+
+export async function getPublishedPostsPage(options: {
+  category?: string;
+  page: number;
+}): Promise<{
+  posts: PostSummary[];
+  totalPages: number;
+}> {
+  const { category, page } = options;
+  const filter = {
+    published: true,
+    ...(category ? { category } : {}),
+  };
+
+  await connectDB();
+  const totalPosts = await Post.countDocuments(filter);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(totalPosts / PUBLIC_POSTS_PAGE_SIZE),
+  );
+
+  if (page > totalPages) {
+    return { posts: [], totalPages };
+  }
+
+  const docs = await Post.find(filter)
+    .select("-content")
+    .sort({ publishedAt: -1, _id: -1 })
+    .skip((page - 1) * PUBLIC_POSTS_PAGE_SIZE)
+    .limit(PUBLIC_POSTS_PAGE_SIZE)
+    .lean<LeanSummary[]>();
+
+  return { posts: docs.map(toSummary), totalPages };
 }
 
 // cache() lets generateMetadata and the page share one database query

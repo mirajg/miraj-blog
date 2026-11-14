@@ -39,8 +39,8 @@ const postSchema = new Schema<PostDocument>(
 );
 
 // Speeds up the public lists (newest published first, optionally per category)
-postSchema.index({ published: 1, publishedAt: -1 });
-postSchema.index({ published: 1, category: 1, publishedAt: -1 });
+postSchema.index({ published: 1, publishedAt: -1, _id: -1 });
+postSchema.index({ published: 1, category: 1, publishedAt: -1, _id: -1 });
 
 // The models.Post check stops "model already exists" errors during hot reload
 const Post =
