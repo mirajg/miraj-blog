@@ -13,7 +13,6 @@ export const AUTHOR = {
   ],
 };
 
-
 export const SITE_KEYWORDS = [
   "web development",
   "JavaScript",
@@ -21,10 +20,14 @@ export const SITE_KEYWORDS = [
   "Next.js",
 ];
 
-// NEXT_PUBLIC_* values must be written out literally like this so Next.js can inline them
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-).replace(/\/+$/, ""); // no trailing slash
+function getSiteUrl() {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // previews
+  return "http://localhost:3000"; // dev fallback
+}
+
+export const SITE_URL = getSiteUrl().replace(/\/$/, ""); // no trailing slash
+
 export const PORTFOLIO_URL = (
   process.env.NEXT_PUBLIC_PORTFOLIO_URL ?? "https://mirajgautam.com.np"
 ).replace(/\/+$/, "");

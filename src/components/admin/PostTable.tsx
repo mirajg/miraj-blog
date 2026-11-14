@@ -56,7 +56,7 @@ export default function PostTable({ posts }: { posts: Row[] }) {
                     View
                   </Link>
                 )}
-                <DeletePostButton id={post.id} title={post.title} />
+                <DeletePostButton id={post.id}/>
               </td>
             </tr>
           ))}
