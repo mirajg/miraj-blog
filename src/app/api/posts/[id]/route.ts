@@ -18,7 +18,7 @@ import {
 } from "@/services/post.service";
 
 type Context = { params: Promise<{ id: string }> };
-
+ 
 export async function PUT(request: Request, { params }: Context) {
   if (!(await isAdmin())) return unauthorized();
 

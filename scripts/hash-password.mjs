@@ -11,7 +11,7 @@ if (password.length < 12) {
   console.error("Use a password with at least 12 characters.");
   process.exit(1);
 }
-
+ 
 const hash = bcrypt.hashSync(password, 12);
 
 // Next.js expands "$" in .env files, so every "$" must be escaped.

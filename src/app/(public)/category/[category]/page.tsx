@@ -5,8 +5,13 @@ import { notFound } from "next/navigation";
 import PostCard from "@/components/blog/PostCard";
 import { getCategory } from "@/constants/site";
 import { getPublishedPosts } from "@/services/post.service";
+import { CATEGORIES } from "@/constants/site";
 
 export const revalidate = 60;
+
+export function generateStaticParams() {
+  return CATEGORIES.map((category) => ({ category: category.slug }));
+}
 
 type Props = { params: Promise<{ category: string }> };
 

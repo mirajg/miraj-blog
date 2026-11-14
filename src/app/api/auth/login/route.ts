@@ -15,9 +15,16 @@ const loginSchema = z.object({
 });
 
 function getClientIp(request: Request) {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
-  );
+  const forwardedFor = request.headers.get("x-forwarded-for") ?? "";
+  const candidate = forwardedFor
+    .split(",")
+    .map((value) => value.trim())
+    .find(Boolean) ??
+    request.headers.get("x-real-ip") ??
+    request.headers.get("cf-connecting-ip") ??
+    "unknown";
+
+  return /^[0-9A-Fa-f:.]+$/.test(candidate) ? candidate : "unknown";
 }
 
 export async function POST(request: Request) {

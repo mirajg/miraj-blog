@@ -4,6 +4,23 @@ export const SITE_DESCRIPTION =
   "A developer blog about web development, JavaScript/TypeScript, AI/ML and the projects I build.";
 export const AUTHOR_NAME = "Miraj Gautam";
 
+export const AUTHOR = {
+  name: "Miraj Gautam",
+  url: "https://mirajgautam.com.np",
+  sameAs: [
+    "https://github.com/mirajg",
+    "https://www.linkedin.com/in/mirajgautam",
+  ],
+};
+
+
+export const SITE_KEYWORDS = [
+  "web development",
+  "JavaScript",
+  "TypeScript",
+  "Next.js",
+];
+
 // NEXT_PUBLIC_* values must be written out literally like this so Next.js can inline them
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"

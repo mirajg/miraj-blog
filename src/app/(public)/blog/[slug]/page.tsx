@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,15 +8,19 @@ import MarkdownContent from "@/components/blog/MarkdownContent";
 import TableOfContents from "@/components/blog/TableOfContents";
 import JsonLd from "@/components/seo/JsonLd";
 import { formatDate } from "@/lib/format";
-import { buildWebSiteJsonLd } from "@/lib/seo";
+import { getPostBySlug, getPublishedPosts } from "@/services/post.service";
 import {
   buildBlogPostingJsonLd,
   buildBreadcrumbJsonLd,
   buildPostMetadata,
 } from "@/lib/seo";
-import { getPostBySlug } from "@/services/post.service";
 
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 type Props = { params: Promise<{ slug: string }> };
 

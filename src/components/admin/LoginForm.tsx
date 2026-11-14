@@ -14,9 +14,9 @@ export default function LoginForm() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
-    setError("");
+    setError(""); 
 
-    const form = new FormData(event.currentTarget);
+    const form = new FormData(event.currentTarget); 
 
     try {
       const response = await fetch("/api/auth/login", {

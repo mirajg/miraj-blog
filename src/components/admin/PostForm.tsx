@@ -41,7 +41,7 @@ export default function PostForm({ post }: Props) {
 
     const payload = {
       title: text("title"),
-      slug: text("slug") || undefined, // blank = auto-generate / keep current
+      slug: text("slug") || undefined, // blank = auto-generate
       description: text("description"),
       content: text("content"),
       category: text("category"),

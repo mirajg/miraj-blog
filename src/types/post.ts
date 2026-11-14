@@ -12,7 +12,7 @@ export type Post = {
   coverImageAlt?: string;
   author: string;
   publishedAt: Date;
-  updatedAt: Date;
+  updatedAt: Date; 
   readingTime: number; // minutes
   published: boolean;
 };

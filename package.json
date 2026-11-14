@@ -15,7 +15,7 @@
     "github-slugger": "^2.0.0",
     "jose": "^6.2.17",
     "mongoose": "^9.12.1",
-    "next": "16.4.5",
+    "next": "16.4.5", 
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-markdown": "^10.1.0",

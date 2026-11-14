@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "mirajgautam.com.np" },
+      { protocol: "https", hostname: "www.mirajgautam.com.np" }, // add this
       { protocol: "https", hostname: "res.cloudinary.com" },
     ],
   },

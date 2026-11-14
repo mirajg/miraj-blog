@@ -45,6 +45,11 @@
     line-height: 1.6;
   }
 
+  html,
+  body {
+    scroll-behavior: smooth;
+  }
+
   main {
     flex: 1 0 auto;
   }

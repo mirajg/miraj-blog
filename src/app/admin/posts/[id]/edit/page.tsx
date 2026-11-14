@@ -11,8 +11,8 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function EditPostPage({ params }: Props) {
   await requireAdmin();
-
-  const { id } = await params;
+ 
+  const { id } = await params; 
   const post = await getPostByIdForAdmin(id);
   if (!post) notFound();
 

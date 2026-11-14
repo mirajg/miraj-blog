@@ -80,7 +80,6 @@ function buildFields(input: PostInput) {
   };
 }
 
-/* ---------- Public (visitors): published posts only ---------- */
 
 export async function getPublishedPosts(
   options: { category?: string; limit?: number } = {},

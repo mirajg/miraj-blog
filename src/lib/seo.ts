@@ -76,7 +76,7 @@ export function buildBreadcrumbJsonLd(items: { name: string; path: string }[]) {
       name: item.name,
       item: absoluteUrl(item.path),
     })),
-  };
+  }; 
 }
 
 // For the home page

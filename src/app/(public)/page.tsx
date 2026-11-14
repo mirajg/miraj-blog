@@ -1,7 +1,6 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import PostCard from "@/components/blog/PostCard";
 import { CATEGORIES, PORTFOLIO_URL, SITE_NAME } from "@/constants/site";
 import { getPublishedPosts } from "@/services/post.service";
 import PostList from "@/components/blog/PostList";
@@ -21,7 +20,6 @@ export default async function HomePage() {
   return (
     <>
       <section className="hero">
-        {/* Edit this intro in your own words */}
         <h1>Notes from building things on the web</h1>
         <p>
           I&apos;m Miraj, a developer. I write about what I build, learn and
