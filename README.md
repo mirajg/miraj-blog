@@ -56,18 +56,6 @@ src/
 4. The slug is generated from the title. You can edit it by hand. It never changes
    automatically when the title changes.
 
-## Deploying (Vercel)
-
-1. Push to GitHub and import the repo in Vercel.
-2. Add all variables from `.env.example` in Project Settings > Environment Variables.
-   Paste `ADMIN_PASSWORD_HASH` without the `\` escapes.
-3. In MongoDB Atlas > Network Access, allow Vercel to connect (usually `0.0.0.0/0`,
-   so keep the database password strong).
-4. Add `blog.mirajgautam.com.np` in Vercel > Domains and create the DNS record Vercel
-   shows (usually a CNAME for `blog`).
-5. After the first deploy, open `/sitemap.xml`, then submit it in Google Search Console
-   and Bing Webmaster Tools.
-
 ## Security notes
 
 - Admin password is stored only as a bcrypt hash. Secrets live in environment variables.
