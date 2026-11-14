@@ -154,6 +154,27 @@ export async function getAllPostsForAdmin(): Promise<AdminPostSummary[]> {
   return docs.map(toAdminSummary);
 }
 
+export async function getAdminPostStats() {
+  const [total, published, drafts] = await Promise.all([
+    Post.countDocuments(),
+    Post.countDocuments({ published: true }),
+    Post.countDocuments({ published: false }),
+  ]);
+
+  return {
+    total,
+    published,
+    drafts,
+  };
+}
+
+export async function getRecentPostsForAdmin(limit = 5) {
+  return Post.find({})
+    .sort({ updatedAt: -1 })
+    .limit(limit)
+    .lean();
+}
+
 export async function getPostByIdForAdmin(id: string): Promise<AdminPost | null> {
   if (!isValidObjectId(id)) return null;
   await connectDB();

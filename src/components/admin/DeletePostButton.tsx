@@ -6,16 +6,14 @@ import { useState } from "react";
 
 export default function DeletePostButton({
   id,
-  title,
 }: {
   id: string;
-  title: string;
 }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
 
   async function handleDelete() {
-    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    if (!window.confirm(`Deleting? This cannot be undone.`)) return;
 
     setDeleting(true);
     try {
