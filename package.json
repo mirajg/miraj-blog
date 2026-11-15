@@ -11,6 +11,7 @@
     "gen-secret": "node -e \"console.log(require('crypto').randomBytes(48).toString('base64url'))\""
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.11.0",
     "github-slugger": "^2.0.0",
