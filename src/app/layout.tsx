@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { PORTFOLIO_URL, SITE_NAME, SITE_URL } from "@/constants/site";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -36,6 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="flex min-h-screen flex-col antialiased">{children}</body>
+      <Analytics />
     </html>
   );
 }
