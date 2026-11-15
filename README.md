@@ -29,6 +29,30 @@ npm run dev
 - Blog: http://localhost:3000
 - Admin: http://localhost:3000/admin/login
 
+## Deploying to Vercel
+
+In **Project Settings > Environment Variables**, set the following values for
+Production. Also set them for Preview if you deploy preview builds:
+
+| Variable | Value |
+| --- | --- |
+| `MONGODB_URI` | MongoDB connection string for the production database |
+| `ADMIN_EMAIL` | Admin login email |
+| `ADMIN_PASSWORD_HASH` | Bcrypt hash generated with `npm run hash-password` |
+| `JWT_SECRET` | Random secret generated with `npm run gen-secret` |
+| `CLOUDINARY_URL` | Cloudinary URL in `cloudinary://key:secret@cloud-name` format |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site URL, e.g. `https://blog.mirajgautam.com.np` |
+
+For Vercel, enter the **raw** bcrypt hash without backslashes. The escaped
+`ADMIN_PASSWORD_HASH=...` line printed by the script is only for `.env.local`;
+the script also prints the raw value for Vercel. Do not set `NODE_ENV` in
+Vercel; the platform configures it. After adding or changing variables, redeploy
+so the build and functions receive them.
+
+The build validates the server-side settings while loading API routes. Missing
+or malformed values fail the build intentionally and are reported by variable
+name, without exposing their values.
+
 ## Project structure
 
 ```

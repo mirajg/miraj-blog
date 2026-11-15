@@ -14,8 +14,10 @@ if (password.length < 12) {
  
 const hash = bcrypt.hashSync(password, 12);
 
-// Next.js expands "$" in .env files, so every "$" must be escaped.
+// Next.js expands "$" in .env files, so every "$" must be escaped there.
 const escaped = hash.replaceAll("$", "\\$");
 
-console.log("\nPaste this line into your env file:\n");
+console.log("\nFor .env.local, paste this line:\n");
 console.log(`ADMIN_PASSWORD_HASH=${escaped}\n`);
+console.log("For Vercel, use this value without backslashes:\n");
+console.log(hash);

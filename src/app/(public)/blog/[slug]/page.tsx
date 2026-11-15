@@ -16,25 +16,43 @@ import {
 } from "@/lib/seo";
 
 export const revalidate = 60;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const posts = await getPublishedPosts();
-  return posts.map((post) => ({ slug: post.slug }));
+  try {
+    const posts = await getPublishedPosts();
+    return posts.map((post) => ({ slug: post.slug }));
+  } catch (err) {
+    console.error("generateStaticParams failed:", err);
+    return [];
+  }
 }
+
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({
   params,
 }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  return post ? buildPostMetadata(post) : {};
+  try {
+    const { slug } = await params;
+    const post = await getPostBySlug(slug);
+    return post ? buildPostMetadata(post) : {};
+  } catch (err) {
+    console.error("generateMetadata failed:", err);
+    return {};
+  }
 }
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  let post;
+  try {
+    post = await getPostBySlug(slug);
+  } catch (err) {
+    console.error(`Failed to load post "${slug}":`, err);
+    throw err; // handled by app/blog/[slug]/error.tsx
+  }
   if (!post) notFound();
 
   const wasUpdated =

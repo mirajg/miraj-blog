@@ -11,7 +11,7 @@ const envSchema = z.object({
     .string()
     .regex(
       /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/,
-      "not a valid bcrypt hash. In .env, escape every $ as \\$",
+      "not a valid bcrypt hash (use the raw value in Vercel; escape each $ as \\$ only in .env files)",
     ),
   JWT_SECRET: z.string().min(32, "must be at least 32 characters"),
 });
