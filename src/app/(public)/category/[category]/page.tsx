@@ -60,11 +60,11 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       <p>
         <Link href="/blog">← All posts</Link>
       </p>
-      <h1>{category.name}</h1>
+      <h1 className="text-3xl text-gray-500">{category.name}</h1>
       <p>{category.description}</p>
 
       {result.posts.length === 0 ? (
-        <p>
+        <p className="pt-5 text-amber-200">
           {page === 1
             ? "No posts in this category yet."
             : "No posts on this page."}

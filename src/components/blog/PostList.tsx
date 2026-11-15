@@ -21,6 +21,6 @@ export default function PostList({
           <PostCard post={post} headingLevel={headingLevel} />
         </li>
       ))}
-    </ul>
+    </ul> 
   );
 }

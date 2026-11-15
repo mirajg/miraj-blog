@@ -68,27 +68,7 @@ export default async function BlogPage({ searchParams }: Props) {
 
       {/* Main content */}
       <div className="mx-auto max-w-5xl px-6 py-14 sm:px-8 sm:py-20">
-        {/* Categories */}
-        <nav aria-label="Categories" className="mb-12">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-zinc-500">
-            Browse topics
-          </h2>
 
-          <ul className="flex flex-wrap gap-2">
-            {CATEGORIES.map((category) => (
-              <li key={category.slug}>
-                <Link
-                  href={`/category/${category.slug}`}
-                  className="inline-flex rounded-full border border-zinc-800 bg-zinc-900/60 px-4 py-2 text-sm font-medium text-zinc-400 transition-all duration-200 hover:border-zinc-600 hover:bg-zinc-800 hover:text-white"
-                >
-                  {category.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Posts */}
         <section aria-labelledby="posts-heading">
           <div className="mb-8 flex items-end justify-between gap-6">
             <div>
@@ -114,13 +94,41 @@ export default async function BlogPage({ searchParams }: Props) {
 
           <PostList
             posts={result.posts}
-            emptyMessage={
+            emptyMessage={ 
               page === 1
                 ? "No posts yet. Check back soon."
                 : "No posts on this page."
             }
           />
         </section>
+
+        <nav aria-label="Categories" className="mb-12">
+          <h2 className="mb-4 text-sm pt-8 font-semibold uppercase tracking-widest text-zinc-500">
+            Browse topics
+          </h2>
+
+
+
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {CATEGORIES.map((category) => (
+              <li key={category.slug}>
+                <Link
+                  href={`/category/${category.slug}`}
+                  className="group flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-zinc-600 hover:bg-zinc-900"
+                >
+                  <span className="font-medium text-zinc-200 transition group-hover:text-white">
+                    {category.name}
+                  </span>
+
+                  <span className="text-zinc-600 transition-all group-hover:translate-x-1 group-hover:text-zinc-300">
+                    →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
 
         {/* Pagination */}
         <div className="mt-10">

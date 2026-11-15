@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: { absolute: `${SITE_NAME} | Web development, TypeScript and AI notes` },
   description:
     "A developer blog about things I build, learn and get stuck on: web development, JavaScript/TypeScript and AI/ML.",
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/" }, 
 };
 
 export default async function HomePage() {
