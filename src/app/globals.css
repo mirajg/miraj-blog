@@ -313,4 +313,25 @@
     padding: 0.5rem 0.75rem;
     text-align: left;
   }
+
+  @keyframes splash-bar {
+    from {
+      width: 0%;
+    }
+
+    to {
+      width: 100%;
+    }
+  }
+
+  .splash-bar {
+    animation: splash-bar 2.2s ease-out forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .splash-bar {
+      animation: none;
+      width: 100%;
+    }
+  }
 }
